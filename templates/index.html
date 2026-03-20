@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sinh dữ liệu ảo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Sinh dữ liệu ảo</h1>
+
+    <div class="top-row">
+        <label>Tên bảng</label>
+        <input type="text" id="tableName" placeholder="Ví dụ: SINHVIEN">
+    </div>
+
+    <div class="top-row">
+        <label>Số dòng cần sinh</label>
+        <input type="number" id="rowCount" value="10" min="1">
+    </div>
+
+    <button type="button" class="add-btn" onclick="addColumn()">Thêm cột +</button>
+    <div id="columnsContainer"></div>
+    <button type="button" class="generate-btn" onclick="generateData()">Sinh dữ liệu</button>
+    <p id="result"></p>
+</div>
+
+<script>
+function addColumn() {
+    document.getElementById("columnsContainer").insertAdjacentHTML("beforeend", `
+        <div class="column-item">
+            <input type="text" class="col-name" placeholder="Tên cột">
+            <select class="col-type">
+                <option value="nvarchar">NVARCHAR</option>
+                <option value="varchar">VARCHAR</option>
+                <option value="date">DATE</option>
+                <option value="int">INT</option>
+                <option value="float">FLOAT</option>
+            </select>
+            <label><input type="checkbox" class="col-pk"> PK</label>
+            <label><input type="checkbox" class="col-fk"> FK</label>
+            <label><input type="checkbox" class="col-notnull"> NOT NULL</label>
+            <input type="text" class="col-ref-table" placeholder="Bảng tham chiếu">
+            <input type="text" class="col-ref-column" placeholder="Cột tham chiếu">
+            <select class="col-rule">
+                <option value="">Không ràng buộc</option>
+                <option value="gender01">Giới tính 0/1</option>
+                <option value="score10">Điểm 0-10</option>
+                <option value="positive">Số dương</option>
+            </select>
+            <button type="button" onclick="this.parentElement.remove()">Xóa</button>
+        </div>
+    `);
+}
+
+function showMessage(msg, ok = false) {
+    const r = document.getElementById("result");
+    r.innerText = msg;
+    r.className = ok ? "msg-success" : "msg-error";
+}
+
+async function generateData() {
+    const table_name = document.getElementById("tableName").value.trim();
+    const row_count = document.getElementById("rowCount").value;
+    const items = document.querySelectorAll(".column-item");
+
+    if (!table_name) return showMessage("Lỗi: Vui lòng nhập tên bảng.");
+    if (!items.length) return showMessage("Lỗi: Vui lòng thêm ít nhất 1 cột.");
+
+    let columns = [], missing = false;
+
+    items.forEach(i => {
+        const name = i.querySelector(".col-name").value.trim();
+        if (!name) return missing = true;
+        columns.push({
+            name,
+            type: i.querySelector(".col-type").value,
+            pk: i.querySelector(".col-pk").checked,
+            fk: i.querySelector(".col-fk").checked,
+            notnull: i.querySelector(".col-notnull").checked,
+            ref_table: i.querySelector(".col-ref-table").value.trim(),
+            ref_column: i.querySelector(".col-ref-column").value.trim(),
+            rule: i.querySelector(".col-rule").value
+        });
+    });
+
+    if (missing) return showMessage("Lỗi: Có cột chưa nhập tên cột.");
+
+    try {
+        const res = await fetch("/generate", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ table_name, row_count, columns })
+        });
+        const data = await res.json();
+        showMessage(data.message, data.success);
+    } catch {
+        showMessage("Lỗi: Không thể kết nối tới server.");
+    }
+}
+
+addColumn();
+</script>
+</body>
+</html>

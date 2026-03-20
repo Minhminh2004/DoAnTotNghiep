@@ -1,0 +1,116 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 40px auto;
+    background: white;
+    border: 2px solid #2f4f90;
+    border-radius: 12px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #1f2f5f;
+}
+
+.top-row {
+    margin-bottom: 15px;
+}
+
+.top-row label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.top-row input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.add-btn,
+.generate-btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.add-btn {
+    background: #5a7bd8;
+    color: white;
+}
+
+.generate-btn {
+    background: #2c9b57;
+    color: white;
+    display: block;
+    margin-top: 30px;
+}
+
+.column-item {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.2fr 80px 80px 110px 1fr 1fr 1fr 80px;
+    gap: 10px;
+    margin-top: 15px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #d9e2f2;
+    border-radius: 10px;
+    background: #fafcff;
+}
+
+.column-item input,
+.column-item select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.column-item label,
+.column-item .check-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.column-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.column-item button,
+.delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#result {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #1f2f5f;
+    min-height: 24px;
+}
